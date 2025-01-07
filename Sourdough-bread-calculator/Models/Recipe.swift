@@ -4,6 +4,7 @@
 //
 //  Created by Pablo Cigoy on 06/01/2025.
 //
+
 struct Recipe: Identifiable, Codable {
     let id: String
     let name: String
