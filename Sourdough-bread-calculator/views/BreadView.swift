@@ -8,33 +8,40 @@
 import SwiftUI
 
 struct BreadView: View {
+    @ObservedObject private var viewModel = RecipesViewModel()
+
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(alignment: .trailing, spacing: 16) {
                 Text("Bread Section")
                     .font(.title)
                     .foregroundColor(.black)
                 
-            
-                // Botón / NavigationLink para ir a AddBreadView
-                               NavigationLink(destination: AddBreadView()) {
-                                   Text("Add New Bread")
-                                       .font(.headline)
-                                       .padding()
-                                       .foregroundColor(.white)
-                                       .background(Color.blue)
-                                       .cornerRadius(8)
-                               }
-                               
-                               Spacer()
-                           }
-                           .padding()
-                           .background(Color.white)
-                           .navigationTitle("Bread")
-                       }
+                NavigationLink(destination: AddBreadView()) {
+                    Text("Add New Bread")
+                        .font(.headline)
+                        .padding()
+                        .foregroundColor(.white)
+                        .background(Color.blue)
+                        .cornerRadius(8)
+                }
+                
+                // La lista de recetas, dentro del mismo VStack
+                List(viewModel.recipes) { recipe in
+                    Text(recipe.name)
+                }
+            }
+            .padding()
+            .navigationTitle("Bread")
+        }
+        .onAppear {
+            viewModel.loadRecipes()
+        }
     }
 }
 
-
+#Preview {
+    BreadView()
+}
 
 
