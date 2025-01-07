@@ -7,7 +7,6 @@
 import SwiftUI
 
 struct AddBreadView: View {
-    // MARK: - ViewModel para guardar la receta
     @StateObject private var viewModel = RecipesViewModel()
 
     // MARK: - Campos del Recipe
@@ -15,9 +14,10 @@ struct AddBreadView: View {
     @State private var name: String = ""
     @State private var breadsPerRecipe: Int = 10
     @State private var description: String = ""
-    @State private var timeInMinutes: Int? = nil
+    
     @State private var hasAutolysis: Bool = false
-
+    @State private var timeInMinutes: Int? = nil
+    
     /// Lista de ingredientes que se irá rellenando dinámicamente
     @State private var ingredientList: [Ingredient] = []
 
@@ -26,68 +26,68 @@ struct AddBreadView: View {
     var body: some View {
         NavigationView {
             Form {
-                // MARK: - Sección de info básica
-                Section(header: Text("Basic Info")) {
-                    TextField("ID (auto)", text: $id)
-                        .disabled(true)  // ID autogenerado por UUID
-
+                // MARK: - Sección de información básica
+                Section(header: Text("Bread Info")) {
                     TextField("Name of the Bread", text: $name)
-
+                    
                     Stepper("Breads per Recipe: \(breadsPerRecipe)",
                             value: $breadsPerRecipe,
                             in: 1...1000)
-
+                    
                     Toggle("Has Autolysis?", isOn: $hasAutolysis)
                 }
-
+             
+                
+                // MARK: - Sección de autólisis (solo si hasAutolysis = true)
+                if hasAutolysis {
+                    Section(header: Text("Autolysis Time")) {
+                        Stepper(
+                            label: {
+                                if let time = timeInMinutes {
+                                    Text("Time: \(time) min")
+                                } else {
+                                    Text("No time set")
+                                }
+                            },
+                            onIncrement: { incrementTime() },
+                            onDecrement: { decrementTime() }
+                        )
+                        
+                        Button("Clear Time") {
+                            timeInMinutes = nil
+                        }
+                        .foregroundColor(.red)
+                        
+                        // Texto sobre pliegues
+                        Text("You can do 3 folds every 40 minutes approximately.")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                    }
+                }
+                
                 // MARK: - Sección de descripción
                 Section(header: Text("Description")) {
                     TextField("Short description", text: $description)
-                    // O, si prefieres multiline:
-                    // TextEditor(text: $description)
-                    //    .frame(minHeight: 80)
                 }
-
-                // MARK: - Sección de tiempo (opcional)
-                Section(header: Text("Time in Minutes (optional)")) {
-                    Stepper(
-                        label: {
-                            if let time = timeInMinutes {
-                                Text("Time: \(time) min")
-                            } else {
-                                Text("No time set")
-                            }
-                        },
-                        onIncrement: { incrementTime() },
-                        onDecrement: { decrementTime() }
-                    )
-
-                    Button("Clear Time") {
-                        timeInMinutes = nil
-                    }
-                    .foregroundColor(.red)
-                }
-
                 // MARK: - Sección de ingredientes
                 Section(header: Text("Ingredients")) {
-                    // Lista editable de ingredientes
                     ForEach($ingredientList, id: \.id) { $ingredient in
                         VStack(alignment: .leading) {
-                            TextField("Name", text: $ingredient.name)
+                            TextField("Ingredient Name", text: $ingredient.name)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
 
-                            HStack() {
-                            TextField("Amount (base)", value: $ingredient.amount, format: .number)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .keyboardType(.decimalPad)
+                            HStack {
+                                TextField("Amount (base)", value: $ingredient.amount, format: .number)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .keyboardType(.decimalPad)
+                                
                                 TextField("Unit (e.g. g, ml, etc.)", text: $ingredient.unit)
                                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                        }
+                            }
                         }
                         .padding(.vertical, 5)
                     }
                     .onDelete { indexSet in
-                        // Permite eliminar ingredientes
                         ingredientList.remove(atOffsets: indexSet)
                     }
 
@@ -105,7 +105,7 @@ struct AddBreadView: View {
                     }
                 }
 
-                // MARK: - Botón para guardar la receta
+                // MARK: - Sección de guardado
                 Section {
                     Button(action: {
                         saveRecipe()
@@ -137,10 +137,7 @@ struct AddBreadView: View {
     }
 
     private func saveRecipe() {
-        // Convertir el array de ingredientes a diccionario [id: Ingredient]
-        let finalIngredientsDict = Dictionary(
-            uniqueKeysWithValues: ingredientList.map { ($0.id, $0) }
-        )
+       
 
         // Construimos la receta con los campos ingresados
         let newRecipe = Recipe(
@@ -148,7 +145,7 @@ struct AddBreadView: View {
             name: name,
             breadsPerRecipe: breadsPerRecipe,
             description: description,
-            ingredients: finalIngredientsDict,
+            ingredients: ingredientList,
             timeInMinutes: timeInMinutes,
             hasAutolysis: hasAutolysis
         )

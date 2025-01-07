@@ -12,7 +12,7 @@ struct BreadView: View {
 
     var body: some View {
         NavigationView {
-            VStack(alignment: .trailing, spacing: 16) {
+            VStack(alignment: .center, spacing: 16) {
                 Text("Bread Section")
                     .font(.title)
                     .foregroundColor(.black)
@@ -25,8 +25,6 @@ struct BreadView: View {
                         .background(Color.blue)
                         .cornerRadius(8)
                 }
-                
-                // La lista de recetas, dentro del mismo VStack
                 List(viewModel.recipes) { recipe in
                     Text(recipe.name)
                 }
