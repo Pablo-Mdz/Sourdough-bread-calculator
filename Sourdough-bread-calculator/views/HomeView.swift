@@ -14,7 +14,7 @@ struct HomeView: View {
                     .font(.largeTitle)
                     .foregroundColor(.black)
                 
-                Text("Start exploring our bread & patisserie recipes")
+                Text("Start exploring our bread & patisserie recipes using sourdough and different types of flour")
                     .font(.body)
                     .foregroundColor(.gray)
                     .multilineTextAlignment(.center)
@@ -32,4 +32,8 @@ struct HomeView: View {
             .navigationTitle("Home")
         }
     }
+}
+
+#Preview {
+    HomeView()
 }

@@ -34,13 +34,13 @@ struct Recipe: Identifiable, Codable {
 struct Step: Identifiable, Codable {
     let id: String
     let name: String
-    let order: Int
+    var order: Int
     
     // Diccionario de ingredientes; la key puede ser el id `"harina"`, `"agua"`, `"sal"`, etc.
     var ingredients: [String: Ingredient]
     
     // Podríamos tener un timer para cada paso; si no se usa, es nil o 0
-    let timeInMinutes: Int?
+    var timeInMinutes: Int?
 }
 
 struct Ingredient: Identifiable, Codable {

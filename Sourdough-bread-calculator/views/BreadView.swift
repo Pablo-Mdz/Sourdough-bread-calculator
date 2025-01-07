@@ -15,14 +15,23 @@ struct BreadView: View {
                     .font(.title)
                     .foregroundColor(.black)
                 
-                // Aquí podrías colocar tu lista de panes, tarjetas, etc.
-                
-                Spacer()
-            }
-            .padding()
-            .background(Color.white)
-            .navigationTitle("Bread")
-        }
+            
+                // Botón / NavigationLink para ir a AddBreadView
+                               NavigationLink(destination: AddBreadView()) {
+                                   Text("Add New Bread")
+                                       .font(.headline)
+                                       .padding()
+                                       .foregroundColor(.white)
+                                       .background(Color.blue)
+                                       .cornerRadius(8)
+                               }
+                               
+                               Spacer()
+                           }
+                           .padding()
+                           .background(Color.white)
+                           .navigationTitle("Bread")
+                       }
     }
 }
 
