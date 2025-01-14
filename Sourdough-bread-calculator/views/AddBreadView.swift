@@ -112,6 +112,7 @@ struct AddBreadView: View {
                     }) {
                         Text("Save Bread")
                             .foregroundColor(.blue)
+                        
                     }
                 }
             }
